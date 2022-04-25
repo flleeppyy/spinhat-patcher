@@ -31,13 +31,18 @@ function isPatched() {
     );
     const files = fs.readdirSync(reasonCompanionResourcesPath);
 
-    return (files.includes("app.asar") && files.includes("app"));
+    return (files.includes("app.asar") && files.includes("app")) ? 1 : 0;
   } else {
-    return false;
+    return 1;
   }
 }
 
-function patch() {
+/**
+ * Patch the reason-companion-plus-app
+ * - Delete the app folder if there is one in Resources
+ * -
+ */
+async function patch(quick = true) {
   const reasonCompanionPath = getReasonCompanionPath();
   if (reasonCompanionPath) {
     const reasonCompanionResourcesPath = path.join(
@@ -46,13 +51,17 @@ function patch() {
     );
     const files = fs.readdirSync(reasonCompanionResourcesPath);
 
-
     if (files.includes("app.asar") && files.includes("app")) {
       const appPath = path.join(reasonCompanionResourcesPath, "app.asar");
+      const appResourcesPath = path.join(reasonCompanionResourcesPath, "app");
+
 
 
 
     }
+  } else {
+    // throw new
+
   }
 }
 

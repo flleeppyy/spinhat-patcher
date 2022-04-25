@@ -1,46 +1,64 @@
-$("#window-controls > #minimize").addEventListener("click", () => {
-  console.log("minimized");
-  electron.ipcRenderer.send("minimize")
-});
+// on document ready
+document.addEventListener("DOMContentLoaded", () => {
+  const $ = document.querySelector.bind(document);
+  $("#window-controls > #minimize").addEventListener("click", () => {
+    console.log("minimized");
+    electron.ipcRenderer.send("minimize")
+  });
 
-$("#window-controls > #close").addEventListener("click", () => {
-  console.log("closing");
-  electron.ipcRenderer.send("close")
-});
+  $("#window-controls > #close").addEventListener("click", () => {
+    console.log("closing");
+    electron.ipcRenderer.send("close")
+  });
 
-// When document is ready
-$(document).ready(() => {
-  const patchStatus = electron.ipcRenderer.sendSync("getPatchStatus");
-  // 0 = not patched, 1 = patched, 2 = patching
+  electron.ipcRenderer.invoke("getPatchStatus").then(patchStatus => {
+    setPatchStatus(patchStatus);
+  });
 
-  // Set patch-button text based on patch status
-  if (patchStatus == 0) {
-    $("#patch-button").innerText = "Patch";
-  } else if (patchStatus == 1) {
-    $("#patch-button").innerText = "Unpatch";
-  } else if (patchStatus == 2) {
-    $("#patch-button").innerText = "Patching...";
+  electron.ipcRenderer.on("patching", () => {
+    setPatchStatus(2);
+  });
+
+  electron.ipcRenderer.on("patched", () => {
+    setPatchStatus(1);
+  });
+
+  // -1 = checking, 0 = not patched, 1 = patched, 2 = patching
+  function setPatchStatus(patchStatus) {
+    switch (patchStatus) {
+      case -1:
+        $("#patch-status").innerHTML = "Checking...";
+        $("#patch-status").classList.add("checking");
+        $("#patch-status").classList.remove("patched");
+        $("#patch-status").classList.remove("patching");
+        $("#patch-button").disabled = true;
+        break;
+      case 0:
+        $("#patch-button").innerText = "Patch";
+        $("#patch-status").innerText = "Not patched";
+        break;
+      case 1:
+        $("#patch-status").innerText = "Patched";
+        $("#patch-button").innerText = "Unpatch";
+        break;
+      case 2:
+        $("#patch-status").innerText = "Patching...";
+        $("#patch-button").innerText = "Patching...";
+        break;
+      default:
+        $("#patch-status").innerText = "Unknown";
+        break;
+      }
+
+      // Set patch-button to be disabled if patching
+      if (patchStatus == 2) {
+        $("#patch-button").disabled = true;
+      } else {
+        $("#patch-button").disabled = false;
+      }
   }
 
-  switch (patchStatus) {
-    case 0:
-      $("#patch-status").innerText = "Not patched";
-      break;
-    case 1:
-      $("#patch-status").innerText = "Patched";
-      break;
-    case 2:
-      $("#patch-status").innerText = "Patching...";
-      break;
-    default:
-      $("#patch-status").innerText = "Unknown";
-      break;
-  }
 
-  // Set patch-button to be disabled if patching
-  if (patchStatus == 2) {
-    $("#patch-button").disabled = true;
-  }
 
   $("#patch-button").addEventListener("click", () => {
 
@@ -59,3 +77,5 @@ $(document).ready(() => {
     }
 
   });
+
+});

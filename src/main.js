@@ -1,6 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require("path");
 const patcher = require('./patcher');
+
+let patchStatus = -1;
+
 /**
  * @type {BrowserWindow}
  */
@@ -40,14 +43,18 @@ ipcMain.on("close", () => {
   mainWindow.close();
 });
 
+
+// Patcher stuff
+
 ipcMain.handle("getPatchStatus", () => {
-  return patcher.is();
+  return patchStatus;
 })
 
 ipcMain.on("patch", () => {
   console.log("patching");
+  patchStatus = 2;
+  // patcher.patch();
   mainWindow.webContents.send("patching");
-
 });
 
 // quit application when all windows are closed
