@@ -1,0 +1,173 @@
+/* Fonts! "./fonts" */
+/* Montserrat Alternates fonts: Bold, Regular */
+@font-face {
+  font-family: "MontserratAlternates-Bold";
+  font-style: normal;
+  font-weight: bold;
+  src: url("./fonts/MontserratAlternates-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MontserratAlternates-Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: url("./fonts/MontserratAlternates-Regular.ttf") format("truetype");
+}
+
+/* Set color vars */
+:root {
+  --color-dark-grey: #5e5d5a;
+  --color-reallydark-grey: #333;
+  --color-reason-mainbg: #bedda8;
+  --color-reason-1: #fae06c;
+  --color-reason-2: #f9cb61;
+  --color-reason-3: #f7ac52;
+  --color-reason-4: #ff8638;
+  --color-reason-5: #f05023;
+  --color-skyblue: #9eccff;
+  --color-cyan: #08acda;
+  --color-unpatched: #ff5555;
+  --color-patched: #55ff55;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "MontserratAlternates-Regular", sans-serif;
+  margin: 0;
+  user-select: none;
+}
+
+/* Disable text selection and highlighting */
+html {
+  color: white;
+}
+
+body {
+  background-color: var(--color-reallydark-grey);
+}
+
+h1 {
+  font-family: "MontserratAlternates-Bold", sans-serif;
+  font-size: 4rem;
+}
+
+#title-bar {
+  display: block;
+  position: fixed;
+  height: 38px;
+  width: calc(100% - 2px);
+  padding: 8px;
+}
+
+#window-controls {
+  display: grid;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: fit-content;
+  grid-template-columns: repeat(2, 38px);
+  -webkit-app-region: no-drag;
+  padding: 8px;
+}
+
+#window-controls > div {
+  fill: white;
+  grid-row: 1 / span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+#window-controls > div:hover {
+  fill: var(--color-reason-1);
+}
+
+#window-controls > div > svg {
+  cursor: pointer;
+}
+
+#window-controls #close {
+  cursor: pointer;
+}
+
+#main-container {
+  display: flex;
+  flex-direction: column;
+  padding: 2em;
+  /* height: 100%; */
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.header > .title {
+  color: var(--color-reason-4);
+  /* Set a color gradient from reason-3 to reason-5 */
+  background: linear-gradient(
+    to right,
+    var(--color-reason-3),
+    var(--color-reason-4),
+    var(--color-reason-5)
+  );
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.header > .subtitle {
+  color: var(--color-reason-5);
+  margin-left: 4px;
+}
+
+button {
+  background-color: var(--color-reason-4);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1em;
+  font-size: large;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: var(--color-dark-grey);
+  cursor: not-allowed;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Light green and light refd for patched/unpatched on patch-status span */
+#patch-status {
+  color: var(--color-reason-3);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 1em;
+}
+
+#patch-status.patched {
+  color: var(--color-patched);
+}
+
+#patch-status.unpatched {
+  color: var(--color-unpatched);
+}
+
+
+.content > * {
+  margin: 12px;
+}

@@ -1,0 +1,18 @@
+{
+  "name": "spinhat-injector",
+  "version": "1.0.0",
+  "description": "Injector for the Reason Companion app, for SpinHat",
+  "main": "src/index.js",
+  "scripts": {
+    "compile": "electron-builder",
+    "start": "electron ./src",
+    "dev": "pnpx nodemon"
+  },
+  "dependencies": {
+    "electron": "^18.1.0",
+    "electron-builder": "^23.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

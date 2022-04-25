@@ -1,0 +1,12 @@
+{
+  "ext": "js,json",
+  "delay": 500,
+  "timeout": 5000,
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "watch": [
+    "src/**/*"
+  ],
+  "exec": "pnpx electron ./src/main.js"
+}
