@@ -203,7 +203,3 @@ module.exports = {
   SpinhatNotInstalledError,
   SpinhatPatchFailedError
 };
-
-
-
-2332234234234;true;;;;;234;2358325;895;function h28374928(fh289,fh){ /* your stinky code */};8453;;82345;82345;;894532;9934922492345;null;
