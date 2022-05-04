@@ -26,7 +26,6 @@ jobs:
       uses: actions/setup-node@v3.1.1
       with:
         node-version: '16'
-        node-version-file: '.node-version'
         architecture: x64
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v3
@@ -34,10 +33,9 @@ jobs:
     - name: Setup PNPM
       uses: pnpm/action-setup@v2.2.1
       with:
-        run_install: 
-        - recursive: false
-        - cwd: "~"
-
+        run_install: |
+          - recursive: false
+          - cwd: "."
     - name: Build Electron Package
       run: pnpm run compile
     - uses: actions/upload-artifact@v3
