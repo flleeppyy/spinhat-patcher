@@ -2,24 +2,37 @@
   "name": "spinhat-injector",
   "version": "1.0.0-beta",
   "description": "SpinHat Injector for the Reason+ Companion app",
-  "main": "src/index.js",
+  "main": "src/main.js",
+  "author": {
+    "name": "Chen Jinkerson (Flleeppyy)",
+    "email": "flleeppyybusiness@gmail.com",
+    "url": "https://fleepy.tv"
+  },
   "scripts": {
     "compile": "electron-builder",
-    "start": "electron ./src",
+    "start": "electron ./src/main.js",
     "dev": "pnpx nodemon"
   },
   "dependencies": {
     "axios": "^0.27.1",
-    "electron": "^18.1.0",
-    "electron-builder": "^23.0.3",
     "isomorphic-git": "^1.17.1",
     "tar": "^6.1.11",
     "winston": "^3.7.2"
   },
   "devDependencies": {
+    "electron-builder": "^23.0.3",
+    "electron": "^18.1.0",
     "nodemon": "^2.0.15"
   },
   "optionalDependencies": {
     "typescript": "^4.6.4"
+  },
+  "build": {
+    "appId": "com.flleeppyy.spinhatpatcher",
+    "productName": "Spinhat Patcher",
+    "win": {
+      "icon": "src/resources/spinhat_v1.ico",
+      "target": "portable"
+    }
   }
 }
