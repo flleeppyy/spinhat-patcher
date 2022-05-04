@@ -25,6 +25,7 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.1.1
       with:
+        node-version: '16'
         node-version-file: '.node-version'
         architecture: x64
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
