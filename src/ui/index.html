@@ -28,9 +28,43 @@
       <h1 class="title">SpinHat</h1>
       <h3 class="subtitle">Patcher</h3>
     </div>
-    <div class="content">
-      <h3>Patch status: <span id="patch-status">Checking...</span></h3>
-      <button id="patch-button">Patch</button>
+    <div class="container">
+      <div id="downloader" class="box">
+        <h2>Download SpinHat</h2>
+        <div id="spinhat-commitinfo">
+          <!-- Hover for commit info -->
+
+          <div id="spinhat-commitinfo-hover">
+            <p>Hover for commit info</p>
+            <div id="spinhat-commitinfo-hover-content">
+            </div>
+          </div>
+          <p class="status">Status: <span id="spinhat-commit-status" class="warning">Checking</span></p>
+        </div>
+        <div id="download-option">
+          <h3>Select:</h3>
+          <select id="download-select">
+            <option value="Install">Install</option>
+            <option value="Update">Update</option>
+            <option value="Uninstall">Uninstall</option>
+          </select>
+
+        </div>
+        <button id="download-button">Go</button>
+      </div>
+      <div class="divider"></div>
+      <div id="patcher" class="box">
+        <h2>Patch</h2>
+        <p class="status">Status: <span id="patch-status"></span></p>
+        <div id="patch-option">
+          <h3>Select: </h3>
+          <select id="patch-select">
+            <option value="0">Patch</option>
+            <option value="1">Unpatch</option>
+          </select>
+        </div>
+        <button id="patch-button">Go</button>
+      </div>
     </div>
   </div>
   <script src="script.js"></script>

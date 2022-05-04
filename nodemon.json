@@ -8,5 +8,5 @@
   "watch": [
     "src/**/*"
   ],
-  "exec": "pnpx electron ./src/main.js"
+  "exec": "pnpx electron --inspect --trace-warnings ./src/main.js"
 }

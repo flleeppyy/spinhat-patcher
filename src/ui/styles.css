@@ -29,6 +29,17 @@
   --color-unpatched: #ff5555;
   --color-patched: #55ff55;
 }
+.error {
+  color: var(--color-unpatched);
+}
+
+.success {
+  color: var(--color-patched);
+}
+
+.warning {
+  color: var(--color-reason-3);
+}
 
 * {
   box-sizing: border-box;
@@ -57,6 +68,7 @@ h1 {
   height: 38px;
   width: calc(100% - 2px);
   padding: 8px;
+  -webkit-app-region: drag;
 }
 
 #window-controls {
@@ -142,30 +154,111 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.content {
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 280px;
+}
+
+.box {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
 }
 
+.box > * {
+  margin: 12px 0;
+}
+
+.divider {
+  width: 4px;
+  height: 100%;
+  background-color: var(--color-reason-4);
+}
+
+#download-option {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+#download-option > * {
+  margin: 0 12px;
+}
+
+#spinhat-commitinfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 12px;
+  width: 100%;
+}
+
+.status {
+  margin: 0;
+  text-align: center;
+  max-width: 240px;
+}
+
+#spinhat-commitinfo-hover {
+  position: relative;
+  display: inline-block;
+}
+
+#spinhat-commitinfo-hover-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  z-index: 1;
+  color: black;
+  padding: 10px;
+  background: whitesmoke;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 12px;
+  height: fit-content;
+  width: max-content;
+}
+
+
+
+#patcher > * {
+  margin: 12px;
+}
+
+#patch-option {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 240px;
+
+}
+
+/* Select dropdown */
+select {
+  border: none;
+  padding: 10px;
+  background-color: var(--color-reason-2);
+  border-radius: 6px;
+}
+
 /* Light green and light refd for patched/unpatched on patch-status span */
-#patch-status {
+/* #patch-status {
   color: var(--color-reason-3);
   font-size: 1.5rem;
   font-weight: bold;
   text-transform: uppercase;
   margin-bottom: 1em;
-}
+} */
 
-#patch-status.patched {
-  color: var(--color-patched);
-}
-
-#patch-status.unpatched {
-  color: var(--color-unpatched);
-}
 
 
 .content > * {

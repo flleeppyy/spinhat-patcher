@@ -1,7 +1,7 @@
 {
   "name": "spinhat-injector",
-  "version": "1.0.0",
-  "description": "Injector for the Reason Companion app, for SpinHat",
+  "version": "1.0.0-beta",
+  "description": "SpinHat Injector for the Reason+ Companion app",
   "main": "src/index.js",
   "scripts": {
     "compile": "electron-builder",
@@ -9,10 +9,17 @@
     "dev": "pnpx nodemon"
   },
   "dependencies": {
+    "axios": "^0.27.1",
     "electron": "^18.1.0",
-    "electron-builder": "^23.0.3"
+    "electron-builder": "^23.0.3",
+    "isomorphic-git": "^1.17.1",
+    "tar": "^6.1.11",
+    "winston": "^3.7.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
+  },
+  "optionalDependencies": {
+    "typescript": "^4.6.4"
   }
 }
