@@ -35,8 +35,8 @@ jobs:
       uses: pnpm/action-setup@v2.2.1
       with:
         run_install: 
-          - recursive: false
-          - cwd: "~"
+        - recursive: false
+        - cwd: "~"
 
     - name: Build Electron Package
       run: pnpm run compile
