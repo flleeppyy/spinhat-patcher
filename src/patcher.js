@@ -75,7 +75,12 @@ async function isPatched(lazy = false) {
 
     const files = await fs.promises.readdir(appFolder);
     for (const file of files) {
-      const bakedHash = getBakedHashOfResource(file);
+      let bakedHash;
+      try {
+        bakedHash = getBakedHashOfResource(file);
+      } catch (e) {
+        continue;
+      }
       if (!bakedHash) {
         continue;
       }
@@ -84,12 +89,16 @@ async function isPatched(lazy = false) {
       switch (file) {
         case "index.js":
           {
-            const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
-            const indexString = `require("${injectorPath.replace(/\\/g, "\\\\")}");`;
-            const indexHash = getsha1hash(indexString);
-            const fileHash = getsha1hash(fs.readFileSync(filePath));
+            try {
+              const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
+              const indexString = `require("${injectorPath.replace(/\\/g, "\\\\")}");`;
+              const indexHash = getsha1hash(indexString);
+              const fileHash = getsha1hash(fs.readFileSync(filePath));
 
-            if (indexHash !== fileHash) {
+              if (indexHash !== fileHash) {
+                return -1;
+              }
+            } catch (e) {
               return -1;
             }
           }
