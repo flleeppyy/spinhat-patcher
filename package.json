@@ -12,7 +12,7 @@
   "scripts": {
     "compile": "electron-builder",
     "start": "electron ./src/main.js",
-    "dev": "pnpx nodemon",
+    "dev": "nodemon",
     "lint": "prettier \"./src/**/*.{js,json,css,html,.ts}\" --write "
   },
   "dependencies": {
