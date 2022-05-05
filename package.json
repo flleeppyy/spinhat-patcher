@@ -12,7 +12,8 @@
   "scripts": {
     "compile": "electron-builder",
     "start": "electron ./src/main.js",
-    "dev": "pnpx nodemon"
+    "dev": "pnpx nodemon",
+    "lint": "prettier \"./src/**/*.{js,json,css,html,.ts}\" --write "
   },
   "dependencies": {
     "axios": "^0.27.1",
@@ -21,9 +22,10 @@
     "winston": "^3.7.2"
   },
   "devDependencies": {
-    "electron-builder": "^23.0.3",
     "electron": "^18.1.0",
-    "nodemon": "^2.0.15"
+    "electron-builder": "^23.0.3",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.2"
   },
   "optionalDependencies": {
     "typescript": "^4.6.4"

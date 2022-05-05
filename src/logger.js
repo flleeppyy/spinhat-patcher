@@ -13,11 +13,11 @@ if (process.env.NODE_ENV !== "production") {
   // Call console.log
   logger.add(
     new winston.transports.Console({
-      stderrLevels: ['error'], // for console.error() in the DevTools
-      consoleWarnLevels: ['warn'], // for console.warn() in the DevTools
+      stderrLevels: ["error"], // for console.error() in the DevTools
+      consoleWarnLevels: ["warn"], // for console.warn() in the DevTools
       level: "debug",
       format: winston.format.simple(),
-    })
+    }),
   );
 }
 

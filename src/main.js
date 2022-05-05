@@ -1,15 +1,14 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
-const patcher = require('./patcher');
+const patcher = require("./patcher");
 const downloader = require("./downloader");
-const { logger } = require('./logger');
-
+const { logger } = require("./logger");
 
 /**
  * @type {BrowserWindow}
  */
 let mainWindow;
-app.on('ready', () => {
+app.on("ready", () => {
   mainWindow = new BrowserWindow({
     width: 720,
     height: 452,
@@ -17,21 +16,21 @@ app.on('ready', () => {
       devTools: true,
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'ui/preload.js')
+      preload: path.join(__dirname, "ui/preload.js"),
     },
     autoHideMenuBar: true,
     title: "SpinHat Patcher",
-    frame:false,
-    resizable:false,
-    maximizable:false,
-    transparent:true,
-    modal:true,
-    icon: path.join(__dirname, 'resources/spinhat_v1.ico'),
+    frame: false,
+    resizable: false,
+    maximizable: false,
+    transparent: true,
+    modal: true,
+    icon: path.join(__dirname, "resources/spinhat_v1.ico"),
   });
 
   // mainWindow.webContents.openDevTools({ mode: 'detach' });
 
-  mainWindow.loadFile('ui/index.html');
+  mainWindow.loadFile("ui/index.html");
 });
 
 ipcMain.on("minimize", () => {
@@ -43,7 +42,6 @@ ipcMain.on("close", () => {
   logger.info("closed");
   mainWindow.close();
 });
-
 
 // Patcher stuff
 
@@ -97,7 +95,7 @@ ipcMain.handle("update", async (event, ...args) => {
     return await downloader.update.apply(downloader, args);
   } catch (err) {
     logger.error(err);
-    throw err
+    throw err;
   }
 });
 
@@ -107,7 +105,7 @@ ipcMain.handle("uninstall", async (event, ...args) => {
     return await downloader.uninstall.apply(downloader, args);
   } catch (err) {
     logger.error(err);
-    throw err
+    throw err;
   }
 });
 
@@ -122,18 +120,17 @@ ipcMain.on("dialogs-showErrorBox", (event, title, content) => {
 ipcMain.on("dialogs-showMessageBox", (event, title, content) => {
   // logger.info(`showing message box: ${title} - ${content}`);
   dialog.showMessageBox(mainWindow, {
-    type: 'info',
+    type: "info",
     title: title,
     message: content,
-    buttons: ['OK']
+    buttons: ["OK"],
   });
 });
 
-
 // quit application when all windows are closed
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
   // on macOS it is common for applications to stay open until the user explicitly quits
-  if (process.platform !== 'darwin') {
+  if (process.platform !== "darwin") {
     app.quit();
   }
-})
+});

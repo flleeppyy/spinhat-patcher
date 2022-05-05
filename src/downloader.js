@@ -207,12 +207,12 @@ async function uninstall() {
 }
 
 let gitChangeMapping = {
-  M: "modified",
-  A: "added",
-  D: "deleted",
-  R: "renamed",
-  C: "copied",
-  U: "unmerged",
+  "M": "modified",
+  "A": "added",
+  "D": "deleted",
+  "R": "renamed",
+  "C": "copied",
+  "U": "unmerged",
   "??": "untracked",
 };
 
@@ -234,7 +234,8 @@ async function getChanges() {
         change: gitChangeMapping[change],
         file: file,
       };
-    }).filter((e) => e.file !== undefined || e.change !== undefined);
+    })
+    .filter((e) => e.file !== undefined || e.change !== undefined);
 }
 
 async function gitReset() {
@@ -262,7 +263,7 @@ async function getLocalCommit() {
 
     let output = "";
     await new Promise((resolve, reject) => {
-      exec.stdout.on('data', (chunk) => {
+      exec.stdout.on("data", (chunk) => {
         output += chunk.toString();
       });
 
@@ -291,19 +292,15 @@ async function getRemoteCommit() {
   }
   try {
     // git log origin/master
-    const exec = child_process.spawn(
-      "git",
-      ["log", "origin/master", "--max-count", "1"],
-      {
-        cwd: spinhatDir,
-        detached: true,
-        env: process.env
-      }
-    );
+    const exec = child_process.spawn("git", ["log", "origin/master", "--max-count", "1"], {
+      cwd: spinhatDir,
+      detached: true,
+      env: process.env,
+    });
 
     let output = "";
     await new Promise((resolve, reject) => {
-      exec.stdout.on('data', (chunk) => {
+      exec.stdout.on("data", (chunk) => {
         output += chunk.toString();
       });
 
@@ -321,7 +318,6 @@ async function getRemoteCommit() {
     });
 
     return parseLog(output);
-
   } catch (e) {
     return null;
   }

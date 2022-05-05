@@ -43,15 +43,15 @@ const SpinHat = {
     },
     dialog: {
       showErrorBox: (title, content) => {
-        console.log(title,content);
+        console.log(title, content);
         ipcRenderer.send("dialogs-showErrorBox", title, content);
       },
       showMessageBox: (title, content) => {
-        console.log(title,content);
+        console.log(title, content);
         ipcRenderer.send("dialogs-showMessageBox", title, content);
       },
     },
   },
-}
+};
 
 contextBridge.exposeInMainWorld("SpinHat", SpinHat);

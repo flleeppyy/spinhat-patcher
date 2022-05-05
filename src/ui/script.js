@@ -39,10 +39,10 @@ window.onload = () => {
     /**
      * @type {HTMLSpanElement}
      */
-     const $patchStatus = $("#patch-status");
+    const $patchStatus = $("#patch-status");
     /**
      * @type {HTMLDivElement}
-      */
+     */
     const $commitInfoHoverContent = $("#spinhat-commitinfo-hover-content");
 
     /// refer to
@@ -73,7 +73,6 @@ window.onload = () => {
         $commitStatus.innerText = "Not Installed";
         setCommitStatusClass("error");
       }
-
 
       // Compare commit values
     }
@@ -131,8 +130,8 @@ window.onload = () => {
       $commitInfoHoverContent.style.display = "none";
     });
 
-    $downloadButton.addEventListener("click",  (event) => {
-      download(event)
+    $downloadButton.addEventListener("click", (event) => {
+      download(event);
     });
 
     $patchButton.addEventListener("click", async () => {
@@ -150,14 +149,21 @@ window.onload = () => {
               $patchStatus.innerText = "Patched";
               setPatchStatusClass("success");
             } else {
-              SpinHat.window.dialog.showMessageBox("Patching Failed", "SpinHat could not be patched into Reason+ Companion. result: " + result);
+              SpinHat.window.dialog.showMessageBox(
+                "Patching Failed",
+                "SpinHat could not be patched into Reason+ Companion. result: " + result,
+              );
               $patchStatus.innerText = "Errored";
               setPatchStatusClass("error");
             }
           } catch (e) {
             // If the message contains EBUSy
             if (e.message.includes("EBUSY")) {
-              SpinHat.window.dialog.showMessageBox("Patching failed", "A file is currently in use and cannot be patched. \nPlease close software that could potentionally be holding these files hostage.\n" + e);
+              SpinHat.window.dialog.showMessageBox(
+                "Patching failed",
+                "A file is currently in use and cannot be patched. \nPlease close software that could potentionally be holding these files hostage.\n" +
+                  e,
+              );
             } else {
               SpinHat.window.dialog.showMessageBox("Patching Failed", e.toString());
             }
@@ -174,7 +180,7 @@ window.onload = () => {
               $patchStatus.innerText = "Not Patched";
               setPatchStatusClass("warning");
             } else {
-              SpinHat.window.dialog.showMessageBox("Unpatching Failed", "Reason+ Companion is not patched" );
+              SpinHat.window.dialog.showMessageBox("Unpatching Failed", "Reason+ Companion is not patched");
               $patchStatus.innerText = "Not Patched";
               setPatchStatusClass("warning");
             }
@@ -248,23 +254,14 @@ window.onload = () => {
             case "success":
               $commitStatus.innerText = "Installed";
               setCommitStatusClass("success");
-              SpinHat.window.dialog.showMessageBox(
-                "Success",
-                "SpinHat has been installed successfully."
-              );
+              SpinHat.window.dialog.showMessageBox("Success", "SpinHat has been installed successfully.");
               checkCommits();
               break;
             case "already installed":
-              SpinHat.window.dialog.showMessageBox(
-                "Already installed",
-                "SpinHat is already installed. You probaby meant to update"
-              );
+              SpinHat.window.dialog.showMessageBox("Already installed", "SpinHat is already installed. You probaby meant to update");
               break;
             default:
-              SpinHat.window.dialog.showErrorBox(
-                "Error",
-                "Nothing was returned from the downloader, this might be an issue."
-              );
+              SpinHat.window.dialog.showErrorBox("Error", "Nothing was returned from the downloader, this might be an issue.");
           }
         } catch (error) {
           SpinHat.window.dialog.showErrorBox("Error", error.message);
@@ -285,45 +282,33 @@ window.onload = () => {
           case 1:
             $commitStatus.innerText = "Up to date";
             setCommitStatusClass("success");
-            SpinHat.window.dialog.showMessageBox(
-              "Success",
-              "SpinHat has been updated successfully."
-            );
+            SpinHat.window.dialog.showMessageBox("Success", "SpinHat has been updated successfully.");
             checkCommits();
             break;
           // Update failed
           case 0:
-            SpinHat.window.dialog.showErrorBox(
-              "Error",
-              "There was an error updating SpinHat."
-            );
+            SpinHat.window.dialog.showErrorBox("Error", "There was an error updating SpinHat.");
             break;
           // Not installed
           case null:
             $commitStatus.innerText = "Not installed";
             setCommitStatusClass("error");
-            SpinHat.window.dialog.showMessageBox(
-              "Not installed",
-              "SpinHat is not installed. You probaby meant to install"
-            );
+            SpinHat.window.dialog.showMessageBox("Not installed", "SpinHat is not installed. You probaby meant to install");
             break;
           // Already up to date
           case -1:
             $commitStatus.innerText = "Up to date";
             setCommitStatusClass("success");
-            SpinHat.window.dialog.showMessageBox(
-              "Info",
-              "SpinHat is up to date."
-            );
+            SpinHat.window.dialog.showMessageBox("Info", "SpinHat is up to date.");
             break;
           // Unstaged changes
           case -2:
             SpinHat.window.dialog.showMessageBox(
               "Warning",
-              "There are unstaged changes in your repository. Please commit or stash them before updating.\n\nIf you don't care about your changes, you can force the update by holding down the shift key."
+              "There are unstaged changes in your repository. Please commit or stash them before updating.\n\nIf you don't care about your changes, you can force the update by holding down the shift key.",
             );
             break;
-          checkCommits();
+            checkCommits();
         }
       } else if (selection.value === "Uninstall") {
         // Check if there are unstaged changes
@@ -331,7 +316,7 @@ window.onload = () => {
         if (gitchanges.length > 0) {
           SpinHat.window.dialog.showErrorBox(
             "Error",
-            "There are unstaged changes in your repository. Please push them before uninstalling."
+            "There are unstaged changes in your repository. Please push them before uninstalling.",
           );
         }
 
@@ -340,23 +325,17 @@ window.onload = () => {
         if (result) {
           $commitStatus.innerText = "Not installed";
           setCommitStatusClass("error");
-          SpinHat.window.dialog.showMessageBox(
-            "Success",
-            "SpinHat has been uninstalled successfully."
-          );
+          SpinHat.window.dialog.showMessageBox("Success", "SpinHat has been uninstalled successfully.");
           checkCommits();
         } else if (result === false) {
           SpinHat.window.dialog.showErrorBox(
             "Error",
-            "An error occured during uninstallation. Things to check for:\n\n- SpinHat's folder is not open in explorer\n- SpinHat's folder is not in use by another program\n- Read and write permissions are set correctly"
+            "An error occured during uninstallation. Things to check for:\n\n- SpinHat's folder is not open in explorer\n- SpinHat's folder is not in use by another program\n- Read and write permissions are set correctly",
           );
         } else if (result === null) {
-          SpinHat.window.dialog.showMessageBox(
-            "Not installed",
-            "SpinHat is not installed."
-          );
+          SpinHat.window.dialog.showMessageBox("Not installed", "SpinHat is not installed.");
         }
       }
     }
   })();
-}
+};

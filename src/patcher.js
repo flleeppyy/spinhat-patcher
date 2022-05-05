@@ -5,12 +5,11 @@ const crypto = require("node:crypto");
 
 const spinhatPath = path.join(process.env.USERPROFILE, "AppData", "Roaming", "spinhat");
 
-
 const bakedHashes = {
   app: {
-    "package.json": "ff3ce29bc773e65edae6313d4737c66083009c98",
-  }
-}
+    "package.json": "611930235e26c2afef04728555baa9bbedecb497",
+  },
+};
 
 /**
  * Some resources may be different per user/system, but we can generate a hash of some of them, sha1
@@ -27,7 +26,7 @@ function getBakedHashOfResource(fileName) {
         return bakedHashes.app["package.json"];
       case "index.js":
         // generate hash of the link to spinhat/libs/injector.js
-        const injectorPath = path.join(spinhatPath, "libs", "injector.js");
+        const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
         const injectorHash = crypto.createHash("sha1").update(fs.readFileSync(injectorPath)).digest("hex");
         return injectorHash;
       default:
@@ -41,13 +40,7 @@ function getBakedHashOfResource(fileName) {
  * Searches for the path of reason-companion-plus-app in the users appdata/local/programs directory
  */
 function getReasonCompanionPath() {
-  const reasonCompanionPath = path.join(
-    process.env.USERPROFILE,
-    "Appdata",
-    "Local",
-    "Programs",
-    "reason-plus-companion-app"
-  );
+  const reasonCompanionPath = path.join(process.env.USERPROFILE, "Appdata", "Local", "Programs", "reason-plus-companion-app");
 
   if (fs.existsSync(reasonCompanionPath)) {
     return reasonCompanionPath;
@@ -91,8 +84,8 @@ async function isPatched(lazy = false) {
       switch (file) {
         case "index.js":
           {
-            const injectorPath = path.join(spinhatPath, "libs", "injector.js");
-            const indexString = `require("${injectorPath.replace(/\\/g, "\\\\")}");`
+            const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
+            const indexString = `require("${injectorPath.replace(/\\/g, "\\\\")}");`;
             const indexHash = getsha1hash(indexString);
             const fileHash = getsha1hash(fs.readFileSync(filePath));
 
@@ -113,21 +106,16 @@ async function isPatched(lazy = false) {
   } else {
     const reasonCompanionPath = getReasonCompanionPath();
     if (reasonCompanionPath) {
-      const reasonCompanionResourcesPath = path.join(
-        reasonCompanionPath,
-        "resources"
-      );
+      const reasonCompanionResourcesPath = path.join(reasonCompanionPath, "resources");
       const files = await fs.promises.readdir(reasonCompanionResourcesPath);
 
       if (files.includes("app.asar") && files.includes("app")) {
-        fs
+        fs;
       }
     } else {
       return 0;
     }
   }
-
-
 }
 
 async function patch() {
@@ -143,7 +131,7 @@ async function patch() {
 
   try {
     const resourcePath = path.join(rppath, "resources");
-    return await (require(path.join(spinhatPath, "libs", "patcher")).patch(resourcePath, spinhatPath));
+    return await require(path.join(spinhatPath, "spinhat/utils", "patcher")).patch(resourcePath, spinhatPath);
   } catch (e) {
     throw new SpinhatPatchFailedError(e);
   }
@@ -158,19 +146,17 @@ async function unpatch() {
 
   try {
     const resourcePath = path.join(rppath, "resources");
-    return await (require(path.join(spinhatPath, "libs", "patcher")).unpatch(resourcePath));
+    return await require(path.join(spinhatPath, "spinhat/utils", "patcher")).unpatch(resourcePath);
   } catch (e) {
     throw new SpinhatUnpatchFailedError(e);
   }
 }
-
 
 // create a new error called "SpinhatNotInstalledError"
 class SpinhatNotInstalledError extends Error {
   constructor(message) {
     super(message);
     this.name = "SpinhatNotInstalledError";
-
   }
 }
 
@@ -201,5 +187,5 @@ module.exports = {
   unpatch,
   getReasonCompanionPath,
   SpinhatNotInstalledError,
-  SpinhatPatchFailedError
+  SpinhatPatchFailedError,
 };
