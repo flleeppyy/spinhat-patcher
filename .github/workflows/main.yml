@@ -36,6 +36,7 @@ jobs:
         version: latest
         run_install: |
           - recursive: false
+          - args: [--frozen-lockfile]
           - cwd: "."
     - name: Build Electron Package
       run: pnpm run compile
