@@ -8,6 +8,7 @@
     "email": "flleeppyybusiness@gmail.com",
     "url": "https://fleepy.tv"
   },
+  "packageManager": "pnpm@6.32.10",
   "scripts": {
     "compile": "electron-builder",
     "start": "electron ./src/main.js",
