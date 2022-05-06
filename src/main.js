@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog,  } = require("electron");
 const path = require("path");
 const patcher = require("./patcher");
 const downloader = require("./downloader");
@@ -8,6 +8,12 @@ const { logger } = require("./logger");
  * @type {BrowserWindow}
  */
 let mainWindow;
+
+/**
+ * @type {BrowserWindow}
+ */
+let settingsWinow;
+
 app.on("ready", () => {
   mainWindow = new BrowserWindow({
     width: 720,
@@ -33,15 +39,17 @@ app.on("ready", () => {
   mainWindow.loadFile("ui/index.html");
 });
 
-ipcMain.on("minimize", () => {
+ipcMain.on("mainMinimize", () => {
   logger.info("minimized");
   mainWindow.minimize();
 });
 
-ipcMain.on("close", () => {
+ipcMain.on("mainClose", () => {
   logger.info("closed");
   mainWindow.close();
 });
+
+
 
 // Patcher stuff
 
@@ -125,6 +133,46 @@ ipcMain.on("dialogs-showMessageBox", (event, title, content) => {
     message: content,
     buttons: ["OK"],
   });
+});
+
+// Settings window
+
+ipcMain.on("settingsShow", (event) => {
+  logger.info("showing settings");
+  if (!settingsWinow) {
+    settingsWinow = new BrowserWindow({
+      width: 600,
+      height: 800,
+      hasShadow: true,
+      webPreferences: {
+        devTools: true,
+        nodeIntegration: false,
+        contextIsolation: true,
+        preload: path.join(__dirname, "ui/settingsui/preload.js"),
+      },
+      autoHideMenuBar: true,
+      title: "SpinHat Patcher Settings",
+      frame: false,
+      resizable: false,
+      maximizable: false,
+      transparent: true,
+      modal: true,
+      icon: path.join(__dirname, "resources/spinhat_v1.ico"),
+    });
+    settingsWinow.loadFile("ui/settingsui/index.html");
+  } else {
+    settingsWinow.show();
+  }
+});
+
+ipcMain.on("settingsClose", (event) => {
+  logger.info("closing settings");
+  settingsWinow.hide();
+});
+
+ipcMain.on("settingsMinimize", (event) => {
+  logger.info("minimizing settings");
+  settingsWinow.minimize();
 });
 
 // quit application when all windows are closed

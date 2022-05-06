@@ -1,4 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron");
+const defineCommon = require("./common");
 
 const running = {
   patcher: {},
@@ -83,24 +84,12 @@ const SpinHat = {
       return -1931;
     },
   },
-  window: {
-    close: () => {
-      ipcRenderer.send("close");
-    },
-    minimize: () => {
-      ipcRenderer.send("minimize");
-    },
-    dialog: {
-      showErrorBox: (title, content) => {
-        console.log(title, content);
-        ipcRenderer.send("dialogs-showErrorBox", title, content);
-      },
-      showMessageBox: (title, content) => {
-        console.log(title, content);
-        ipcRenderer.send("dialogs-showMessageBox", title, content);
-      },
-    },
-  },
 };
+
+defineCommon(SpinHat, "main");
+
+SpinHat.window.showSettings = () => {
+  ipcRenderer.send("settingsShow");
+}
 
 contextBridge.exposeInMainWorld("SpinHat", SpinHat);
