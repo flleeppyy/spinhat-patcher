@@ -1,4 +1,4 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer,  } = require("electron");
 
 module.exports = function defineCommonSpinhat(spinhat, basename) {
   const base = {
@@ -9,6 +9,9 @@ module.exports = function defineCommonSpinhat(spinhat, basename) {
       minimize: () => {
         ipcRenderer.send(basename + "Minimize");
       },
+      hide: () => {
+        ipcRenderer.send(basename + "Hide");
+      },
       dialog: {
         showErrorBox: (title, content) => {
           console.log(title, content);
@@ -18,6 +21,14 @@ module.exports = function defineCommonSpinhat(spinhat, basename) {
           console.log(title, content);
           ipcRenderer.send("dialogs-showMessageBox", title, content);
         },
+        /**
+         *
+         * @param {import("electron/main").OpenDialogOptions} options
+         * @returns
+         */
+        showOpenDialog: (options) => {
+          return ipcRenderer.invoke("dialogs-showOpenDialog", options);
+        }
       },
     },
   };

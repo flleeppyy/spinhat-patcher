@@ -8,5 +8,8 @@
   "watch": [
     "src/**/*"
   ],
+  "ignore": [
+    "src/ui"
+  ],
   "exec": "pnpm electron --inspect --trace-warnings ./src/main.js"
 }

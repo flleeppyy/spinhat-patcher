@@ -1,11 +1,11 @@
 declare module globalThis {
-  let SpinHat: SpinHat;
+  let Spinhat: Spinhat;
 }
 
 // oh why do i even bother
 declare namespace uiScript {
 
-  declare function heehoo {
+  declare function heehoo() {
     const $commitStatus: HTMLDivElement;
     async function checkCommits(): Promise<boolean>;
   }

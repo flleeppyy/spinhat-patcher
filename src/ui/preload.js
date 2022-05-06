@@ -6,7 +6,7 @@ const running = {
   downloader: {},
   git: {},
 };
-const SpinHat = {
+const Spinhat = {
   patcher: {
     patch: async () => {
       // return await ipcRenderer.invoke("patch");
@@ -86,10 +86,10 @@ const SpinHat = {
   },
 };
 
-defineCommon(SpinHat, "main");
+defineCommon(Spinhat, "main");
 
-SpinHat.window.showSettings = () => {
+Spinhat.window.showSettings = () => {
   ipcRenderer.send("settingsShow");
 }
 
-contextBridge.exposeInMainWorld("SpinHat", SpinHat);
+contextBridge.exposeInMainWorld("Spinhat", Spinhat);

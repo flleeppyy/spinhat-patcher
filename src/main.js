@@ -12,7 +12,7 @@ let mainWindow;
 /**
  * @type {BrowserWindow}
  */
-let settingsWinow;
+let settingsWindow;
 
 app.on("ready", () => {
   mainWindow = new BrowserWindow({
@@ -135,12 +135,18 @@ ipcMain.on("dialogs-showMessageBox", (event, title, content) => {
   });
 });
 
+ipcMain.handle("dialogs-showOpenDialog", async (event, options) => {
+  logger.info("showing open dialog");
+  return await dialog.showOpenDialog(mainWindow, options);
+
+});
+
 // Settings window
 
 ipcMain.on("settingsShow", (event) => {
   logger.info("showing settings");
-  if (!settingsWinow) {
-    settingsWinow = new BrowserWindow({
+  if (!settingsWindow) {
+    settingsWindow = new BrowserWindow({
       width: 600,
       height: 800,
       hasShadow: true,
@@ -159,20 +165,20 @@ ipcMain.on("settingsShow", (event) => {
       modal: true,
       icon: path.join(__dirname, "resources/spinhat_v1.ico"),
     });
-    settingsWinow.loadFile("ui/settingsui/index.html");
+    settingsWindow.loadFile("ui/settingsui/index.html");
   } else {
-    settingsWinow.show();
+    settingsWindow.show();
   }
 });
 
 ipcMain.on("settingsClose", (event) => {
   logger.info("closing settings");
-  settingsWinow.hide();
+  settingsWindow.hide();
 });
 
 ipcMain.on("settingsMinimize", (event) => {
   logger.info("minimizing settings");
-  settingsWinow.minimize();
+  settingsWindow.minimize();
 });
 
 // quit application when all windows are closed

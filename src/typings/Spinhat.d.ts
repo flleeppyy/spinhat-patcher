@@ -1,6 +1,6 @@
 // Modify Window and typeof globalThis
 
-interface SpinHat {
+interface Spinhat {
   patcher: {
     patch: () => Promise<boolean>;
     unpatch: () => Promise<boolean>;

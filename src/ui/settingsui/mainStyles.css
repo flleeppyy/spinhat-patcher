@@ -1,3 +1,65 @@
 body {
   background-color: #353535;
 }
+
+/* .setting-container:not-f {
+} */
+
+/* Not first child setting-container */
+/* .setting-container:not(:first-child) {
+  margin: 16px 0;
+} */
+
+.setting-container > input, .setting-container > button {
+  margin-top: 8px;
+}
+
+label {
+  font-size: 12px;
+}
+
+.container {
+  height: auto;
+}
+
+#main-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+}
+
+.horizontal-divider {
+  margin: 8px 0;
+}
+#settings {
+  height: 100%;
+}
+
+button.less-round {
+  border-radius: 6px;
+}
+button.but-smaller {
+  font-size: medium;
+  padding:12px;
+}
+
+button.but-even-smaller {
+  font-size: 12px;
+  padding: 4px;
+}
+
+button.red {
+  background-color: #b34343;
+}
+#footer {
+  display: flex;
+  flex-direction: row;
+}
+
+.footer button:not(:first-child) {
+  margin: 0 12px;
+}

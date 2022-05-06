@@ -1,10 +1,10 @@
 const { contextBridge } = require("electron");
 const defineCommon = require("../common");
 
-// const SpinHat = {
-  
-// }
+const Spinhat = {
 
-defineCommon(SpinHat, "settings");
+}
 
-contextBridge.exposeInMainWorld("SpinHat", SpinHat);
+defineCommon(Spinhat, "settings");
+
+contextBridge.exposeInMainWorld("Spinhat", Spinhat);

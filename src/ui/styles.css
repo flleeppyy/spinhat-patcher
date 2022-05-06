@@ -110,7 +110,7 @@ h1 {
   flex-direction: column;
   padding: 2em;
   /* height: 100%; */
-  justify-content: space-between;
+  /* justify-content: space-between; */
   height: 100vh;
 }
 
@@ -135,7 +135,7 @@ h1 {
 }
 
 button {
-  background-color: var(--color-reason-4);
+  background-color: #ff8638;
   color: white;
   border: none;
   border-radius: 12px;
@@ -170,10 +170,30 @@ button:disabled {
   margin: 12px 0;
 }
 
-.divider {
+.vertical-divider {
   width: 4px;
   height: 100%;
   background-color: var(--color-reason-4);
+}
+
+.vertical-divider.smaller, .vertical-divider.lighter.smaller {
+  width: 2px;
+  height: 100%;
+}
+
+.vertical-divider.lighter, .horizontal-divider.lighter {
+  background-color: var(--color-reason-2);
+}
+
+.horizontal-divider {
+  width: 100%;
+  height: 4px;
+  background-color: var(--color-reason-4);
+}
+
+.horizontal-divider.smaller, .horizontal-divider.lighter.smaller {
+  width: 100%;
+  height: 2px;
 }
 
 #download-option {

@@ -19,7 +19,7 @@ const bakedHashes = {
 function getBakedHashOfResource(fileName) {
   const rppath = getReasonCompanionPath();
   if (rppath) {
-    const resourcePath = path.join(rppath, "resources");
+    // const resourcePath = path.join(rppath, "resources");
     // const filePath = path.join(resourcePath, fileName);
     switch (fileName) {
       case "package.json":
@@ -76,39 +76,33 @@ async function isPatched(lazy = false) {
     const files = await fs.promises.readdir(appFolder);
     for (const file of files) {
       let bakedHash;
-      try {
-        bakedHash = getBakedHashOfResource(file);
-      } catch (e) {
-        continue;
-      }
       if (!bakedHash) {
-        continue;
+        try {
+          bakedHash = getBakedHashOfResource(file);
+        } catch (e) {
+          continue;
+        }
       }
+      if (!bakedHash) continue;
       const filePath = path.join(appFolder, file);
 
-      switch (file) {
-        case "index.js":
-          {
-            try {
-              const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
-              const indexString = `require("${injectorPath.replace(/\\/g, "\\\\")}");`;
-              const indexHash = getsha1hash(indexString);
-              const fileHash = getsha1hash(fs.readFileSync(filePath));
+      if (file ==="index.js") {
+        try {
+          const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
+          const indexString = `require("${injectorPath.replace(/\\/g, "\\\\")}");`;
+          const indexHash = getsha1hash(indexString);
+          const fileHash = getsha1hash(fs.readFileSync(filePath));
 
-              if (indexHash !== fileHash) {
-                return -1;
-              }
-            } catch (e) {
-              return -1;
-            }
+          if (indexHash !== fileHash) {
+            return -1;
           }
-          break;
-        default:
+        } catch (e) {
           const fileHash = getsha1hash(fs.readFileSync(filePath));
           if (fileHash !== bakedHash) {
             return -1;
           }
           break;
+        }
       }
     }
     return 1;
@@ -131,7 +125,7 @@ async function patch() {
   const rppath = getReasonCompanionPath();
 
   if (!fs.existsSync(spinhatPath)) {
-    throw new SpinhatNotInstalledError("SpinHat is not installed. Checked: " + spinhatPath);
+    throw new SpinhatNotInstalledError("Spinhat is not installed. Checked: " + spinhatPath);
   }
 
   if (!rppath || !fs.existsSync(rppath)) {

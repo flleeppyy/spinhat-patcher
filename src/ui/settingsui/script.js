@@ -4,23 +4,70 @@ window.onload = async function() {
   // Window Controls
   $("#window-controls > #minimize").addEventListener("click", () => {
     console.log("minimized");
-    SpinHat.window.minimize();
+    Spinhat.window.minimize();
   });
 
   $("#window-controls > #close").addEventListener("click", () => {
     console.log("closing");
-    SpinHat.window.close();
+    Spinhat.window.close();
   });
 
-  $("#window-controls > #settings").addEventListener("click", () => {
-    console.log("showing settings");
-    SpinHat.window.showSettings();
-  });
-
-  $("patch-path").addEventListener("change", () => {
-    const value = $("patch-path").value.trim();
-    if (value) {
-      localStorage.setItem("patchPath", value);
+  function setSetting(setting, value) {
+    const settings = localStorage.getItem("settings");
+    if (settings) {
+      const parsed = JSON.parse(settings);
+      parsed[setting] = value;
+      localStorage.setItem("settings", JSON.stringify(parsed));
+    } else {
+      localStorage.setItem("settings", JSON.stringify({ [setting]: value }));
     }
+  }
+
+  function getSetting(setting, defaultValue) {
+    const settings = localStorage.getItem("settings");
+    if (settings) {
+      const parsed = JSON.parse(settings);
+      return parsed[setting] || defaultValue;
+    }
+  }
+
+  function cssFormat(input) {
+    return input.replace(/-([a-z])/g, (match, p1) => p1.toUpperCase());
+  }
+
+  $("#save-settings").addEventListener("click", () => {
+    console.log("saving settings");
+    // for each input in the settings
+    const inputs = document.querySelectorAll("#settings > .setting-container input");
+    for (const input of inputs) {
+      // hee-hoo-haa -> heeHooHaa
+      const setting = cssFormat(input.id);
+      // TODO: Add code for checkbox
+      // set the setting to the value of the input
+      console.log(input.value)
+      setSetting(setting, input.value);
+    }
+    Spinhat.window.close();
   });
+
+  $("#cancel").addEventListener("click", () => {
+    console.log("canceling");
+    loadSettings();
+    Spinhat.window.close();
+  });
+
+  // Load settings
+  function loadSettings() {
+    const settingsInputs = settings.querySelectorAll("#settings > .setting-container input");
+    for (const input of settingsInputs) {
+      const setting = cssFormat(input.id);
+      // input.value = getSetting(setting, input.value);
+      if (input.type === "checkbox") {
+        input.checked = getSetting(setting, input.checked);
+      } else {
+        input.value = getSetting(setting, input.value);
+      }
+    }
+  }
+
 }
