@@ -2,8 +2,8 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("node:crypto");
-
-const spinhatPath = path.join(process.env.USERPROFILE, "AppData", "Roaming", "spinhat");
+const { localStorage } = require("electron-browser-storage");
+const { getSetting } = require("./settings");
 
 const bakedHashes = {
   app: {
@@ -11,22 +11,34 @@ const bakedHashes = {
   },
 };
 
+async function getSpinhatPath() {
+  const item = (await getSetting("patchPath"))?.trim();
+  if (item && item?.length > 0) {
+    console.log(item)
+    return item;
+  }
+  const defaultpath = path.join(process.env.USERPROFILE, "AppData", "Roaming", "spinhat")
+  console.log(defaultpath);
+  return defaultpath;
+}
+
 /**
  * Some resources may be different per user/system, but we can generate a hash of some of them, sha1
  * @param {string} fileName Filename relative to the apps resources directory
- * @returns {string | null} The sha1 hash of the file
+ * @returns {Promise<string | null>} The sha1 hash of the file
  */
-function getBakedHashOfResource(fileName) {
+async function getBakedHashOfResource(fileName) {
   const rppath = getReasonCompanionPath();
   if (rppath) {
-    // const resourcePath = path.join(rppath, "resources");
+    const resourcePath = path.join(rppath, "resources");
     // const filePath = path.join(resourcePath, fileName);
     switch (fileName) {
       case "package.json":
         return bakedHashes.app["package.json"];
       case "index.js":
         // generate hash of the link to spinhat/libs/injector.js
-        const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
+        // const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
+        const injectorPath = await localStorage.getItem("patchPath") || path.join(await getSpinhatPath(), "spinhat", "main.js");
         const injectorHash = crypto.createHash("sha1").update(fs.readFileSync(injectorPath)).digest("hex");
         return injectorHash;
       default:
@@ -76,33 +88,40 @@ async function isPatched(lazy = false) {
     const files = await fs.promises.readdir(appFolder);
     for (const file of files) {
       let bakedHash;
-      if (!bakedHash) {
-        try {
-          bakedHash = getBakedHashOfResource(file);
-        } catch (e) {
-          continue;
-        }
+      try {
+        bakedHash = await getBakedHashOfResource(file);
+      } catch (e) {
+        continue;
       }
-      if (!bakedHash) continue;
+      if (!bakedHash) {
+        continue;
+      }
       const filePath = path.join(appFolder, file);
 
-      if (file ==="index.js") {
-        try {
-          const injectorPath = path.join(spinhatPath, "spinhat", "main.js");
-          const indexString = `require("${injectorPath.replace(/\\/g, "\\\\")}");`;
-          const indexHash = getsha1hash(indexString);
-          const fileHash = getsha1hash(fs.readFileSync(filePath));
+      switch (file) {
+        case "index.js":
+          {
+            try {
+              const injectorPath = path.join(await getSpinhatPath(), "spinhat", "main.js");
+              const indexString = `require("${injectorPath.replace(/\\/g, "\\\\")}");`;
+              const indexHash = getsha1hash(indexString);
+              const fileHash = getsha1hash(fs.readFileSync(filePath));
 
-          if (indexHash !== fileHash) {
-            return -1;
+              if (indexHash !== fileHash) {
+                return -1;
+              }
+            } catch (e) {
+              return -1;
+
+            }
           }
-        } catch (e) {
+          break;
+        default:
           const fileHash = getsha1hash(fs.readFileSync(filePath));
           if (fileHash !== bakedHash) {
             return -1;
           }
           break;
-        }
       }
     }
     return 1;
@@ -123,9 +142,10 @@ async function isPatched(lazy = false) {
 
 async function patch() {
   const rppath = getReasonCompanionPath();
+  const spinhatpath = await getSpinhatPath();
 
-  if (!fs.existsSync(spinhatPath)) {
-    throw new SpinhatNotInstalledError("Spinhat is not installed. Checked: " + spinhatPath);
+  if (!fs.existsSync(spinhatpath)) {
+    throw new SpinhatNotInstalledError("SpinHat is not installed. Checked: " + spinhatpath);
   }
 
   if (!rppath || !fs.existsSync(rppath)) {
@@ -134,7 +154,7 @@ async function patch() {
 
   try {
     const resourcePath = path.join(rppath, "resources");
-    return await require(path.join(spinhatPath, "spinhat/utils", "patcher")).patch(resourcePath, spinhatPath);
+    return await require(path.join(spinhatpath, "spinhat/utils", "patcher")).patch(resourcePath, spinhatpath);
   } catch (e) {
     throw new SpinhatPatchFailedError(e);
   }
@@ -149,7 +169,7 @@ async function unpatch() {
 
   try {
     const resourcePath = path.join(rppath, "resources");
-    return await require(path.join(spinhatPath, "spinhat/utils", "patcher")).unpatch(resourcePath);
+    return await require(path.join(await getSpinhatPath(), "spinhat/utils", "patcher")).unpatch(resourcePath);
   } catch (e) {
     throw new SpinhatUnpatchFailedError(e);
   }
