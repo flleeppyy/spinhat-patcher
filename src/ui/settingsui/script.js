@@ -12,29 +12,6 @@ window.onload = async function() {
     Spinhat.window.close();
   });
 
-  function setSetting(setting, value) {
-    const settings = localStorage.getItem("settings");
-    if (settings) {
-      const parsed = JSON.parse(settings);
-      parsed[setting] = value;
-      localStorage.setItem("settings", JSON.stringify(parsed));
-    } else {
-      localStorage.setItem("settings", JSON.stringify({ [setting]: value }));
-    }
-  }
-
-  function getSetting(setting, defaultValue) {
-    const settings = localStorage.getItem("settings");
-    if (settings) {
-      const parsed = JSON.parse(settings);
-      return parsed[setting] || defaultValue;
-    }
-  }
-
-  function cssFormat(input) {
-    return input.replace(/-([a-z])/g, (match, p1) => p1.toUpperCase());
-  }
-
   $("#save-settings").addEventListener("click", () => {
     console.log("saving settings");
     // for each input in the settings
@@ -60,14 +37,44 @@ window.onload = async function() {
   function loadSettings() {
     const settingsInputs = settings.querySelectorAll("#settings > .setting-container input");
     for (const input of settingsInputs) {
+      console.log(input, input.type,input.value)
       const setting = cssFormat(input.id);
+      // get inputLabel above input
+      const inputLabel = input.parentNode.querySelector("label");
+      // const inputLabel = settings.querySelector(`#settings > .setting-container label[for="${input.id}"]`);
       // input.value = getSetting(setting, input.value);
       if (input.type === "checkbox") {
         input.checked = getSetting(setting, input.checked);
       } else {
         input.value = getSetting(setting, input.value);
+        if (inputLabel) inputLabel?.innerHTML = input.value;
+        console.log(input.value)
       }
-    }
+    }  
   }
+  loadSettings();
+};
 
+
+function setSetting(setting, value) {
+  const settings = localStorage.getItem("settings");
+  if (settings) {
+    const parsed = JSON.parse(settings);
+    parsed[setting] = value;
+    localStorage.setItem("settings", JSON.stringify(parsed));
+  } else {
+    localStorage.setItem("settings", JSON.stringify({ [setting]: value }));
+  }
+}
+
+function getSetting(setting, defaultValue) {
+  const settings = localStorage.getItem("settings");
+  if (settings) {
+    const parsed = JSON.parse(settings);
+    return parsed[setting] || defaultValue;
+  }
+}
+
+function cssFormat(input) {
+  return input.replace(/-([a-z])/g, (match, p1) => p1.toUpperCase());
 }

@@ -34,11 +34,12 @@
         <div class="setting-container">
           <h3>Custom patch path</h3>
           <p>Use a different instance of Spinhat. This is useful for development.</p>
-          <button class="but-even-smaller less-round">Choose Path</button>
+          <button id="clear" class="but-even-smaller less-round">Clear</button>
+          <button id="choosepath" class="but-even-smaller less-round">Choose Path</button>
           <label for="patch-path">None</label>
           <input type="text" id="patch-path" webkitdirectory hidden/>
           <script>
-            document.querySelector('button').addEventListener('click', function() {
+            document.querySelector('#choosepath').addEventListener('click', function() {
               Spinhat.window.dialog.showOpenDialog({
                 title: 'Choose Spinhat Patch Path',
                 properties: ['openDirectory']
@@ -53,8 +54,9 @@
               });
             });
 
-            document.querySelector('input[type="file"]').addEventListener('change', function() {
-              document.querySelector('label').innerHTML = this.value;
+            document.querySelector('#clear').addEventListener('click', function() {
+              document.querySelector('label').innerHTML = 'None';
+              document.querySelector('input').value = '';
             });
           </script>
 
