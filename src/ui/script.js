@@ -147,6 +147,8 @@ window.onload = async () => {
     switch (selectedPatch) {
       case "Patch":
         console.log("patching");
+        $patchStatus.innerText = "Patching";
+        setPatchStatusClass("warning");
         try {
           const result = await Spinhat.patcher.patch();
           if (result) {
