@@ -4,25 +4,26 @@ const axios = require("axios");
 const tar = require("tar");
 const child_process = require("child_process");
 const { logger } = require("./logger");
+const { getSpinhatPath } = require("./settings");
 // Not using isophoric-git because its garbage
 
 const gitUrl = "https://github.com/flleeppyy/spinhat";
-const spinhatDir = path.join(process.env.APPDATA, "spinhat");
 
 /**
  * Download the github repo "flleeppyy/spinhat" and put it into appdata/roaming/spinhat
  * @returns {Promise<string>} "success" - download successful; "failure" - download failed; "already installed" - already installed
  */
 async function download() {
+  const spinhatPath = await getSpinhatPath();
   // Create the spinhat directory if it dosn't exist
-  if (!fs.existsSync(spinhatDir)) {
-    await fs.promises.mkdir(spinhatDir, {
+  if (!fs.existsSync(spinhatPath)) {
+    await fs.promises.mkdir(spinhatPath, {
       recursive: true,
     });
   }
 
   // Check if the directory is empty
-  if (fs.readdirSync(spinhatDir).length > 0) {
+  if (fs.readdirSync(spinhatPath).length > 0) {
     return "already installed";
   }
 
@@ -31,7 +32,7 @@ async function download() {
     responseType: "arraybuffer",
   });
 
-  const tempPath = path.join(spinhatDir, "temp.tar.gz");
+  const tempPath = path.join(spinhatPath, "temp.tar.gz");
   // Write to temp file
   await fs.promises.writeFile(tempPath, response.data);
 
@@ -40,7 +41,7 @@ async function download() {
 
   await tar.x({
     file: tempPath,
-    cwd: spinhatDir,
+    cwd: spinhatPath,
     strip: 1,
   });
 
@@ -58,12 +59,12 @@ async function download() {
 
   // Initialize repo
   child_process.execSync("git init", {
-    cwd: spinhatDir,
+    cwd: spinhatPath,
   });
 
   // Add the remote
   const exec = child_process.execSync("git remote add origin " + gitUrl, {
-    cwd: spinhatDir,
+    cwd: spinhatPath,
   });
 
   if (exec.toString().includes("fatal")) {
@@ -79,26 +80,27 @@ async function download() {
  * @returns {Promise<string>} "success" - download successful; "failure" - download failed; "already installed" - already installed
  */
 async function download2() {
+  const spinhatPath = await getSpinhatPath();
   // Create the spinhat directory if it dosn't exist
-  if (!fs.existsSync(spinhatDir)) {
-    await fs.promises.mkdir(spinhatDir, {
+  if (!fs.existsSync(spinhatPath)) {
+    await fs.promises.mkdir(spinhatPath, {
       recursive: true,
     });
   }
 
   // Check if the directory is empty
-  if (fs.readdirSync(spinhatDir).length > 0) {
+  if (fs.readdirSync(spinhatPath).length > 0) {
     return "already installed";
   }
 
   // Initalize git
   child_process.execSync("git init", {
-    cwd: spinhatDir,
+    cwd: spinhatPath,
   });
 
   // Add the remote
   const exec = child_process.execSync("git remote add origin " + gitUrl, {
-    cwd: spinhatDir,
+    cwd: spinhatPath,
   });
 
   // Honestly dont know why im doing this because execSync would just throw an error.
@@ -108,7 +110,7 @@ async function download2() {
 
   // Pull from the remote
   const exec2 = child_process.execSync("git pull origin master", {
-    cwd: spinhatDir,
+    cwd: spinhatPath,
   });
 
   // same here
@@ -129,14 +131,14 @@ async function download2() {
  * -2 - Unstaged changes;
  */
 async function update(force = false) {
-  logger.debug(force);
+  const spinhatPath = await getSpinhatPath();
   // if the directory is empty,
-  if (fs.readdirSync(spinhatDir).length == 0) {
+  if (fs.readdirSync(spinhatPath).length == 0) {
     return null;
     // await download();
   }
 
-  if (gitFetch() == null) {
+  if (await gitFetch() == null) {
     return null;
   }
 
@@ -164,7 +166,7 @@ async function update(force = false) {
 
   // Pull from git
   const exec = child_process.exec("git pull origin master", {
-    cwd: spinhatDir,
+    cwd: spinhatPath,
   });
 
   // Wait for the pull to finish
@@ -192,9 +194,10 @@ async function update(force = false) {
  * @returns {Promise<boolean | null>} true - uninstall successful; false - uninstall failed; null - not installed
  */
 async function uninstall() {
+  const spinhatPath = await getSpinhatPath();
   try {
-    if (fs.existsSync(spinhatDir)) {
-      await fs.promises.rm(spinhatDir, {
+    if (fs.existsSync(spinhatPath)) {
+      await fs.promises.rm(spinhatPath, {
         recursive: true,
       });
       return true;
@@ -217,12 +220,14 @@ let gitChangeMapping = {
 };
 
 async function getChanges() {
-  if (!fs.existsSync(spinhatDir)) {
+  const spinhatPath = await getSpinhatPath();
+
+  if (!fs.existsSync(spinhatPath)) {
     return null;
   }
   return child_process
     .execSync("git status --porcelain", {
-      cwd: spinhatDir,
+      cwd: spinhatPath,
     })
     .toString()
     .trim()
@@ -239,11 +244,13 @@ async function getChanges() {
 }
 
 async function gitReset() {
-  if (!fs.existsSync(spinhatDir)) {
+  const spinhatPath = await getSpinhatPath();
+
+  if (!fs.existsSync(spinhatPath)) {
     return null;
   }
   const exec = child_process.execSync("git reset --hard origin/master", {
-    cwd: spinhatDir,
+    cwd: spinhatPath,
   });
 
   if (exec.toString().includes("fatal")) {
@@ -252,13 +259,14 @@ async function gitReset() {
 }
 
 async function getLocalCommit() {
-  if (!fs.existsSync(spinhatDir)) {
+  const spinhatPath = await getSpinhatPath();
+  if (!fs.existsSync(spinhatPath)) {
     return null;
   }
   try {
     // git log HEAD
     const exec = child_process.exec("git log HEAD --max-count 1", {
-      cwd: spinhatDir,
+      cwd: spinhatPath,
     });
 
     let output = "";
@@ -287,13 +295,14 @@ async function getLocalCommit() {
 }
 
 async function getRemoteCommit() {
-  if (gitFetch() == false) {
+  if (await gitFetch() == false) {
     return null;
   }
+  const spinhatPath = await getSpinhatPath();
   try {
     // git log origin/master
     const exec = child_process.spawn("git", ["log", "origin/master", "--max-count", "1"], {
-      cwd: spinhatDir,
+      cwd: spinhatPath,
       detached: true,
       env: process.env,
     });
@@ -326,13 +335,14 @@ async function getRemoteCommit() {
 /**
  * @returns {boolean} true - fetch successful; false - fetch failed; null - not installed
  */
-function gitFetch() {
-  if (!fs.existsSync(spinhatDir)) {
+async function gitFetch() {
+  const spinhatPath = await getSpinhatPath();
+  if (!fs.existsSync(spinhatPath)) {
     return false;
   }
   try {
     child_process.execSync("git fetch", {
-      cwd: spinhatDir,
+      cwd: spinhatPath,
     });
     return true;
   } catch (e) {

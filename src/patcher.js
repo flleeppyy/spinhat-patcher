@@ -3,24 +3,13 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("node:crypto");
 const { localStorage } = require("electron-browser-storage");
-const { getSetting } = require("./settings");
+const { getSpinhatPath } = require("./settings");
 
 const bakedHashes = {
   app: {
     "package.json": "611930235e26c2afef04728555baa9bbedecb497",
   },
 };
-
-async function getSpinhatPath() {
-  const item = (await getSetting("patchPath"))?.trim();
-  if (item && item?.length > 0) {
-    console.log(item)
-    return item;
-  }
-  const defaultpath = path.join(process.env.USERPROFILE, "AppData", "Roaming", "spinhat")
-  console.log(defaultpath);
-  return defaultpath;
-}
 
 /**
  * Some resources may be different per user/system, but we can generate a hash of some of them, sha1
