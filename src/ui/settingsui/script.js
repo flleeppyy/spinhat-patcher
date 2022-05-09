@@ -53,6 +53,25 @@ window.onload = async function() {
     }  
   }
   loadSettings();
+
+  // Tools
+  $("#open-resources-folder").addEventListener("click", async () => {
+    const path = getSetting("patchPath");
+    if (!path) {
+      alert("Could not find resources folder");
+      return;
+    }
+    Spinhat.openFolder(Spinhat.getResourcesPath());
+  });
+
+  $("#open-spinhat-folder").addEventListener("click", async () => {
+    const path = Spinhat.getSpinhatPath();
+    if (!path) {
+      alert("Could not find spinhat folder");
+      return;
+    }
+    Spinhat.openFolder(Spinhat.getSpinhatPath());
+  })
 };
 
 
