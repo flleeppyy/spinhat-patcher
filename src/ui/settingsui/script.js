@@ -47,7 +47,7 @@ window.onload = async function() {
         input.checked = getSetting(setting, input.checked);
       } else {
         input.value = getSetting(setting, input.value);
-        if (inputLabel) inputLabel?.innerHTML = input.value;
+        if (inputLabel) inputLabel.innerHTML = input.value;
         console.log(input.value)
       }
     }  
