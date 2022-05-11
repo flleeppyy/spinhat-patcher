@@ -5,6 +5,7 @@
 # Spinhat Patcher
 
 Patcher for Spinhat, the Reason+ Companion Improvement Project.
+
 ![GitHub Repo Stars](https://img.shields.io/github/stars/flleeppyy/spinhat-patcher?label=Stars)
 [![Discord](https://img.shields.io/discord/829993555820019773?label=Discord)](https://discord.gg/AYC7jCCjqR)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?label=License)](/LICENSE)
